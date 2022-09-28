@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\Admin\AdminProductController;
+use App\Http\Controllers\HomeController;
+use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +16,11 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
+Route::get('/', [HomeController::class, 'index']);
+Route::get('/{id}', [ProductController::class, 'show']);
+
+//Admin
+Route::prefix('admin/products')->name('admin.products.')->group(function() {
+    Route::get('', [AdminProductController::class, 'index'])->name('index');
+    Route::get('edit', [AdminProductController::class, 'edit'])->name('edit');
 });
