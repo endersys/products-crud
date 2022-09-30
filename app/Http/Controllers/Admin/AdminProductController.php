@@ -52,6 +52,13 @@ class AdminProductController extends Controller
         try {
             $input = $request->all();
 
+            if ($request->hasFile('cover')) {
+                $image = $request->file('cover');
+                $imageName = date('YmdHi') . $image->getClientOriginalName();
+                $image->move(public_path('images'), $imageName);
+                $input['cover'] = $imageName;
+            }
+
             $product->update(array_merge($input, ['slug' => Str::slug($input['name'])]));
 
             return to_route('admin.products.index');

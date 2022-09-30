@@ -28,6 +28,6 @@ Route::prefix('admin/produtos')->name('admin.products.')->group(function() {
     Route::post('', [AdminProductController::class, 'store'])->name('store');
     Route::get('{product:slug}/editar', [AdminProductController::class, 'edit'])->name('edit');
     Route::get('/create', [AdminProductController::class, 'create'])->name('create');
-    Route::patch('', [AdminProductController::class, 'update'])->name('update');
+    Route::patch('{product:slug}', [AdminProductController::class, 'update'])->name('update');
     Route::delete('{product:slug}', [AdminProductController::class, 'destroy'])->name('destroy');
 });
