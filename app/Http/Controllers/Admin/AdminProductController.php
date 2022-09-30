@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Product\{ StoreProductRequest, UpdateProductRequest };
 use App\Models\Product;
 use Exception;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class AdminProductController extends Controller
@@ -27,14 +28,15 @@ class AdminProductController extends Controller
         try {
             $input = $request->all();
 
-            if ($request->hasFile('cover')) {
-                $image = $request->file('cover');
-                $imageName = date('YmdHi') . $image->getClientOriginalName();
-                $image->move(public_path('images'), $imageName);
-                $input['cover'] = $imageName;
+            if ($input['cover']) {
+                $file = $input['cover'];
+                $path = $file->store('public/products');
+                $input['cover'] = $path;
             }
             
-            Product::create(array_merge($input, ['slug' => Str::slug($input['name'] . date('Hi'))]));
+            $input['slug'] = Str::slug($input['name']);
+
+            Product::create($input);
             return to_route('admin.products.index');
         } catch (Exception $e) {
             return to_route('admin.products.create')->with('error', 'Erro ao tentar cadastrar o produto!');
@@ -51,14 +53,16 @@ class AdminProductController extends Controller
         try {
             $input = $request->all();
 
-            if ($request->hasFile('cover')) {
-                $image = $request->file('cover');
-                $imageName = date('YmdHi') . $image->getClientOriginalName();
-                $image->move(public_path('images'), $imageName);
-                $input['cover'] = $imageName;
+            if (!is_null($input['cover']) && $input['cover']->isValid()) {
+                Storage::delete($product->cover ?? '');
+                $file = $input['cover'];
+                $path = $file->store('public/products');
+                $input['cover'] = $path;
             }
+            
+            $input['slug'] = Str::slug($input['name']);
 
-            $product->update(array_merge($input, ['slug' => Str::slug($input['name'])]));
+            $product->update($input);
 
             return to_route('admin.products.index');
         } catch (Exception $e) {
@@ -69,7 +73,14 @@ class AdminProductController extends Controller
     public function destroy(Product $product)
     {
         $product->delete();
+        Storage::delete($product->cover);
 
         return to_route('admin.products.index');
+    }
+
+    public function destroyImage(Product $product) {
+        Storage::delete($product->cover);
+        $product->update(['cover' => null]);
+        return back();
     }
 }
