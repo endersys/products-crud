@@ -42,7 +42,11 @@
                                 <td class="px-4 py-3">{{ $product->stock }}</td>
                                 <td class="px-4 py-3 text-sm text-right space-x-3 text-gray-900">
                                     <a href="{{ route('admin.products.edit', $product->slug) }}" class="mt-3 text-indigo-500 inline-flex items-center">Editar</a>
-                                    <a class="mt-3 text-indigo-500 inline-flex items-center">Deletar</a>
+                                    <form action="{{ route('admin.products.destroy', $product->slug) }}" method="POST">
+                                        @csrf
+                                        @method('delete')
+                                        <button type="submit" class="mt-3 text-indigo-500 inline-flex items-center">Deletar</button>
+                                    </form>
                                 </td>
                             </tr>
                         @endforeach

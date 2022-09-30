@@ -40,7 +40,7 @@ class AdminProductController extends Controller
                 $input['cover'] = $imageName;
             }
             
-            Product::create(array_merge($input, ['slug' => Str::slug($input['name'])]));
+            Product::create(array_merge($input, ['slug' => Str::slug($input['name'] . date('Hi'))]));
             return to_route('admin.products.index');
         } catch (Exception $e) {
             dd($e->getMessage());
@@ -74,5 +74,8 @@ class AdminProductController extends Controller
 
     public function destroy(Product $product)
     {
+        $product->delete();
+
+        return to_route('admin.products.index');
     }
 }
