@@ -35,7 +35,7 @@
                             <tr @if ($loop->odd) class="bg-gray-300" @endif>
                                 <td class="px-4 py-3">{{ $loop->index + 1 }}</td>
                                 <td class="px-4 py-3">
-                                    <img alt="ecommerce" class="object-cover object-center w-full h-full block" src="{{ asset("/images/$product->cover") }}">
+                                    <img alt="ecommerce" class="object-cover object-center w-full h-full block" src="{{ \Illuminate\Support\Facades\Storage::url("$product->cover") }}">
                                 </td>
                                 <td class="px-4 py-3">{{ $product->name }}</td>
                                 <td class="px-4 py-3">R${{ $product->price }}</td>
