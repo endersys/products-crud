@@ -16,13 +16,18 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', [HomeController::class, 'index']);
+Route::get('/', [HomeController::class, 'index'])->name('site.index');
+
 Route::prefix('products')->name('products.')->group(function() {
-    Route::get('/{product}', [ProductController::class, 'show'])->name('show');
+    Route::get('{product:slug}', [ProductController::class, 'show'])->name('show');
 });
 
 //Admin
 Route::prefix('admin/products')->name('admin.products.')->group(function() {
     Route::get('', [AdminProductController::class, 'index'])->name('index');
-    Route::get('edit', [AdminProductController::class, 'edit'])->name('edit');
+    Route::post('', [AdminProductController::class, 'store'])->name('store');
+    Route::get('{product:slug}/edit', [AdminProductController::class, 'edit'])->name('edit');
+    Route::get('/create', [AdminProductController::class, 'create'])->name('create');
+    Route::patch('', [AdminProductController::class, 'update'])->name('update');
+    Route::delete('', [AdminProductController::class, 'destroy'])->name('destroy');
 });
