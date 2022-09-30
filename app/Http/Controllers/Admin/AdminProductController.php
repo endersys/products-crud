@@ -6,7 +6,6 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\Product\{ StoreProductRequest, UpdateProductRequest };
 use App\Models\Product;
 use Exception;
-use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class AdminProductController extends Controller
