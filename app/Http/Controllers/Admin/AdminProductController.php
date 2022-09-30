@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Product\{ StoreProductRequest, UpdateProductRequest };
 use App\Models\Product;
 use Exception;
 use Illuminate\Http\Request;
@@ -22,17 +23,11 @@ class AdminProductController extends Controller
         return view('admin.create');
     }
 
-    public function store(Request $request)
+    public function store(StoreProductRequest $request)
     {
         try {
-            $input = $request->validate([
-                'name' => 'required',
-                'price' => 'required',
-                'stock' => 'required|integer',
-                'description' => 'required',
-                'cover' => 'required|file'
-            ]);
-            
+            $input = $request->all();
+
             if ($request->hasFile('cover')) {
                 $image = $request->file('cover');
                 $imageName = date('YmdHi') . $image->getClientOriginalName();
@@ -43,7 +38,7 @@ class AdminProductController extends Controller
             Product::create(array_merge($input, ['slug' => Str::slug($input['name'] . date('Hi'))]));
             return to_route('admin.products.index');
         } catch (Exception $e) {
-            dd($e->getMessage());
+            return to_route('admin.products.create')->with('error', 'Erro ao tentar cadastrar o produto!');
         }
     }
 
@@ -52,24 +47,17 @@ class AdminProductController extends Controller
         return view('admin.edit', compact('product'));
     }
 
-    public function update(Request $request, Product $product)
+    public function update(UpdateProductRequest $request, Product $product)
     {
         try {
-            $input = $request->validate([
-                'name' => 'required',
-                'price' => 'required',
-                'stock' => 'required|integer',
-                'description' => 'required',
-            ]);
+            $input = $request->all();
 
             $product->update(array_merge($input, ['slug' => Str::slug($input['name'])]));
 
             return to_route('admin.products.index');
         } catch (Exception $e) {
-            dd($e->getMessage());
+            return to_route('admin.products.index')->with('error', 'Erro ao tentar atualizar o produto!');
         }
-
-        return to_route('admin.products');
     }
 
     public function destroy(Product $product)
