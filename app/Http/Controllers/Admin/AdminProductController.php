@@ -26,7 +26,7 @@ class AdminProductController extends Controller
     public function store(StoreProductRequest $request)
     {
         try {
-            $input = $request->all();
+            $input = $request->validated();
 
             if ($input['cover']) {
                 $file = $input['cover'];
@@ -51,7 +51,7 @@ class AdminProductController extends Controller
     public function update(UpdateProductRequest $request, Product $product)
     {
         try {
-            $input = $request->all();
+            $input = $request->validated();
 
             if (!is_null($input['cover']) && $input['cover']->isValid()) {
                 Storage::delete($product->cover ?? '');
