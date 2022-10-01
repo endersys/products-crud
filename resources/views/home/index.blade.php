@@ -5,14 +5,14 @@
         <div class="container px-5 py-24 mx-auto">
             <div class="flex flex-wrap -m-4">
                 @foreach ($products as $product)
-                    <div class="lg:w-1/4 md:w-1/2 p-4 w-full">
+                    <div class="lg:w-1/4 md:w-1/2 p-4 w-full text-center">
                         <a class="block relative h-48 rounded overflow-hidden">
-                            <img alt="ecommerce" class="object-cover object-center w-full h-full block"
+                            <img alt="ecommerce" class="object-scale-down object-center w-full h-full block"
                                 src="{{ \Illuminate\Support\Facades\Storage::url("$product->cover") }}">
                         </a>
                         <div class="mt-4">
                             <h2 class="text-gray-900 title-font text-lg font-medium">{{ $product->name }}</h2>
-                            <p class="mt-1">{{ $product->price }}</p>
+                            <p class="mt-1">R$ {{ $product->price }}</p>
                         </div>
                         <a href="{{ route('products.show', $product->slug) }}" class="mt-3 text-indigo-500 inline-flex items-center">Ver mais
                             <svg fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
